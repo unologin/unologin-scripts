@@ -1,0 +1,44 @@
+{
+  "extends": 
+  [ 
+    "eslint:recommended",
+    "google"
+  ],
+  "plugins":
+  [
+    "react",
+    "@typescript-eslint"
+  ],
+  "parser": "babel-eslint",
+  "env": 
+  {
+    "browser": true
+  },
+  "globals":
+  {
+    "process": "readonly",
+    "JSX": "readonly"
+  },
+  "rules": 
+  {   
+    "no-trailing-spaces": "off",
+    "react/jsx-uses-react": "error",   
+    "react/jsx-uses-vars": "error",
+    "brace-style": "off",
+    "@typescript-eslint/brace-style":
+    [
+      "error",
+      "allman",
+      { "allowSingleLine": true }
+    ],
+    "valid-jsdoc": 
+    [
+      "error",
+      { 
+        "requireReturnType": false,
+        "requireParamType": false 
+      }
+    ],
+    "padded-blocks": "off"
+  }
+}
