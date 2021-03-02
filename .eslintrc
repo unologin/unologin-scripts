@@ -6,25 +6,18 @@
   ],
   "plugins":
   [
-    "react",
     "@typescript-eslint"
   ],
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "env": 
   {
     "browser": true
   },
-  "globals":
-  {
-    "process": "readonly",
-    "JSX": "readonly"
-  },
   "rules": 
   {   
     "no-trailing-spaces": "off",
-    "react/jsx-uses-react": "error",   
-    "react/jsx-uses-vars": "error",
     "brace-style": "off",
+    "object-curly-spacing": "off",
     "@typescript-eslint/brace-style":
     [
       "error",
@@ -39,6 +32,18 @@
         "requireParamType": false 
       }
     ],
-    "padded-blocks": "off"
+    "padded-blocks": "off",
+    "indent":
+    [
+      "error",
+      2,
+      {
+        "FunctionDeclaration":
+        {
+          "body": 1
+        }
+      }
+    ],
+    "block-spacing": [ "error", "always" ]
   }
 }
