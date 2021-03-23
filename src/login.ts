@@ -1,13 +1,11 @@
 
 import { runLoginHandlers } from './events';
 
-import * as options from './options';
-
 import { startCheckout } from './popup-process';
 
 interface LoginMessage
 {
-  appLoginToken: string;
+  success: boolean;
   invoiceId?: string | null;
 }
 
@@ -17,21 +15,11 @@ interface LoginMessage
  * @returns {Promise<void>} void
  */
 export async function login(
-  { appLoginToken, invoiceId } : LoginMessage
+  { success, invoiceId } : LoginMessage
 ) : Promise<void>
 {
   // store the temporary login token
-  if (appLoginToken)
-  {
-    document.cookie = 
-      '_uno_appLoginTokenTmp=' + 
-      appLoginToken + 
-      ';domain=' + 
-      options.get().cookiesDomain + 
-      '; path=/';
-  }
-
-  if (appLoginToken)
+  if (success)
   {
     await runLoginHandlers();
   }

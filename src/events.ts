@@ -64,10 +64,10 @@ async function checkQuery() : Promise<void>
 {
   const params = new URLSearchParams(window.location.search);
 
-  const token = params.get('_uno_appLoginToken');
+  const success = params.get('_uno_loginSuccess') === 'true';
   const invoiceId = params.get('_uno_invoiceId');
 
-  if (token)
+  if (params.get('_uno_loginSuccess'))
   {
     // fallback has been triggered and we're still in the popup
     if (window.opener)
@@ -78,12 +78,12 @@ async function checkQuery() : Promise<void>
       window.close();
     }
 
-    await login({ invoiceId, appLoginToken: token });
+    await login({ invoiceId, success });
 
     // if the user isn't taken somewhere else, remove the query parameters
     const url = new URL(window.location.href);
 
-    url.searchParams.delete('_uno_appLoginToken');
+    url.searchParams.delete('_uno_loginSuccess');
     url.searchParams.delete('_uno_invoiceId');
 
     window.location.replace(url.href);

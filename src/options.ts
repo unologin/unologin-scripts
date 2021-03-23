@@ -5,10 +5,7 @@ export interface SetupParams
   realm?: string;
   
   // appId of your unologin app
-  appId: string; 
-
-  // domain to set the login cookie on
-  cookiesDomain: string;
+  appId: string;
 }
 
 interface Setup extends SetupParams
@@ -27,14 +24,13 @@ let options : Setup | null = null;
  * @returns void 
  */
 export function setup(
-  { appId, cookiesDomain, realm } : SetupParams
+  { appId, realm } : SetupParams
 ) : void
 {
   options = 
   {  
     realm: realm || 'https://unolog.in',
     appId,
-    cookiesDomain,
   };
 }
 
