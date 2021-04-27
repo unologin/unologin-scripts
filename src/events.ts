@@ -109,6 +109,10 @@ async function onMessage(event : MessageEvent) : Promise<void>
   }
 }
 
-window.addEventListener('load', checkQuery);
-
-window.addEventListener('message', onMessage);
+// some framework (like nextjs) will load libraries on the server too
+// which causes window to be undefined
+if (typeof(window) !== 'undefined')
+{
+  window.addEventListener('load', checkQuery);
+  window.addEventListener('message', onMessage);
+}

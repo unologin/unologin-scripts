@@ -12,6 +12,8 @@ module.exports =
     filename: 'main.js',
     library: 'unologin',
     libraryTarget: 'umd',
+    // this fixes "self is not defined" in nextjs
+    globalObject: 'this',
   },
   resolve: 
   {
