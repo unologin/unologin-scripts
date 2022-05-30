@@ -114,7 +114,7 @@ export function startLogin(loginOptions : LoginOptions) : void
   const process = PopupProcess.start(
     {
       url: createUrl(
-        '/app-signup/login/', 
+        '/', 
         { ...loginOptions, client: 'Web', appId: options.get().appId }
       ),
       title: 'unolog·in',

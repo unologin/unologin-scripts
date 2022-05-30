@@ -1,7 +1,7 @@
 
 export interface SetupParams
 {
-  // which base url to use for unologin, defaults to https://unolog.in.
+  // which base url to use for unologin, defaults to https://login.unolog.in.
   realm?: string;
   
   // appId of your unologin app
@@ -29,7 +29,7 @@ export function setup(
 {
   options = 
   {  
-    realm: realm || 'https://unolog.in',
+    realm: realm || 'https://login.unolog.in',
     appId,
   };
 }
