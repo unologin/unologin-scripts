@@ -8,6 +8,7 @@ export interface LoginOptions
 {
   userClass: string;
   mode?: string;
+  code?: string;
 }
 
 interface PopupParams

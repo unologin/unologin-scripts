@@ -109,7 +109,7 @@ async function onMessage(event : MessageEvent) : Promise<void>
   }
 }
 
-// some framework (like nextjs) will load libraries on the server too
+// some frameworks (like nextjs) will load libraries on the server too
 // which causes window to be undefined
 if (typeof(window) !== 'undefined')
 {
