@@ -7,7 +7,7 @@ import { onCheckout, onLogin } from './events';
 export interface LoginOptions
 {
   userClass: string;
-  mode?: string;
+  mode?: 'login' | 'register';
   code?: string;
 }
 
