@@ -1,6 +1,6 @@
 {
   "name": "unologin-scripts",
-  "version": "1.0.0y",
+  "version": "0.2.1",
   "description": "unolog·in client scripts",
   "main": "dist/main.js",
   "files": [
