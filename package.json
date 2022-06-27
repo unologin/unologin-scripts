@@ -3,6 +3,7 @@
   "version": "0.2.1",
   "description": "unolog·in client scripts",
   "main": "dist/main.js",
+  "sideEffects": true,
   "files": [
     "dist/**"
   ],

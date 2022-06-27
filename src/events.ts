@@ -90,6 +90,29 @@ async function checkQuery() : Promise<void>
   }
 }
 
+const messageHandlers : {
+  [k: string]: (msg: any, event: MessageEvent) => any
+} =
+{
+  _uno_onLoginInternal: login,
+  _uno_onLoginHandler: async ({ url } : { url: string }, e) => 
+  {
+    const { success, msg } = await (await fetch(url)).json();
+
+    // @ts-ignore
+    e.source?.postMessage(
+      JSON.stringify(
+        {
+          id: '_uno_onLoginHandlerReturned',
+          success,
+          msg,
+        },
+      ),
+      e.origin
+    );
+  },
+};
+
 /** 
  * @param event event 
  * @returns {Promise<void>} void
@@ -102,9 +125,9 @@ async function onMessage(event : MessageEvent) : Promise<void>
   {
     const msg = JSON.parse(event.data);
 
-    if (msg.id == '_uno_onLoginInternal')
+    if (msg.id in messageHandlers)
     {
-      await login(msg);
+      await messageHandlers[msg.id](msg, event);
     }
   }
 }
