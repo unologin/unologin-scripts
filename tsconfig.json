@@ -12,7 +12,8 @@
     // Import non-ES modules as default imports.
     "esModuleInterop": true,
     "declaration": true,
-    "outDir": "./dist"
+    "outDir": "./lib",
+    "skipLibCheck": true
   },
   "include": 
   [
