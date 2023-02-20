@@ -8,7 +8,7 @@ import * as options from './options';
 /**
  * @internal
  */
-interface PopupParams
+export interface PopupParams
 {
   url : URL;
   title: string;

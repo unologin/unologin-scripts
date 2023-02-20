@@ -13,7 +13,7 @@ export enum LoginFlowErrorType
 }
 
 /**
- * 
+ * Error thrown by {@link startLogin}
  */
 export class LoginFlowError
   extends Error
@@ -146,7 +146,7 @@ export function createLoginUrl(
  * 
  * @returns Promise<void>
  * 
- * @throws {@link LoginFlowError}
+ * @throws error {@link LoginFlowError}
  */
 export function startLogin(
   loginOptions : LoginOptions = {},

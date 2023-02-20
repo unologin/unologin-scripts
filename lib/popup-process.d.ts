@@ -2,7 +2,7 @@ import { PopupMessage, PopupWindow } from './popup';
 /**
  * @internal
  */
-interface PopupParams {
+export interface PopupParams {
     url: URL;
     title: string;
     width?: number;
@@ -81,4 +81,3 @@ export default class PopupProcess {
      */
     static start(params: PopupParams): PopupProcess;
 }
-export {};

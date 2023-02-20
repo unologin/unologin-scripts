@@ -6,7 +6,7 @@ export declare enum LoginFlowErrorType {
     ClosedByUser = "ClosedByUser"
 }
 /**
- *
+ * Error thrown by {@link startLogin}
  */
 export declare class LoginFlowError extends Error {
     readonly type: LoginFlowErrorType;
@@ -74,7 +74,7 @@ export declare function createLoginUrl(loginOptions?: LoginOptions): URL;
  *
  * @returns Promise<void>
  *
- * @throws {@link LoginFlowError}
+ * @throws error {@link LoginFlowError}
  */
 export declare function startLogin(loginOptions?: LoginOptions): Promise<void>;
 /**
