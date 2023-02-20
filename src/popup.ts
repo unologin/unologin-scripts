@@ -1,4 +1,15 @@
 
+export type PopupWindow = Pick<
+  Window, 
+  'closed' |
+  'close' |
+  'focus'
+>
+
+export type PopupMessage = 
+  Pick<MessageEvent, 'origin' | 'data'> & 
+  { source: PopupWindow | MessageEventSource | null }
+
 /**
  * Opens a centered popup or redirects the user.
  * 
@@ -13,20 +24,21 @@ export function openCenteredPopup(
   url : URL, 
   title : string, 
   width: number = 370, 
-  height: number = 562
+  height: number = 562,
 
-) : Window | null
+) : PopupWindow | null
 {
-  // @ts-ignore
-  const y = window.top.outerHeight / 2 + window.top.screenY - ( height / 2);
-  // @ts-ignore
-  const x = window.top.outerWidth / 2 + window.top.screenX - ( width / 2);
+  const top = window.top || window.parent || window;
+
+  const y = top.outerHeight / 2 + top.screenY - ( height / 2);
+  
+  const x = top.outerWidth / 2 + top.screenX - ( width / 2);
   
   const popup = window.open(
     url.href, 
     title,
     // eslint-disable-next-line max-len
-    `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${y}, left=${x}`
+    `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${y}, left=${x}`,
   );
   
   if (popup)

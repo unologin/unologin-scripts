@@ -1,49 +1,48 @@
 
-export interface SetupParams
+export interface Options
 {
-  // which base url to use for unologin, defaults to https://login.unolog.in.
-  realm?: string;
-  
-  // optional API the frontend is using may be inferred from realm 
-  api?: string;
-
-  // appId of your unologin app
+  /**
+   * Your appId.
+   */
   appId: string;
+
+  /**
+   * Which base URL to use for the login flow.
+   * Defaults to https://login.unolog.in
+   */
+  realm: string;
+  
+  /**
+   * Optional API URL the frontend is using.
+   * May be inferred from realm.
+   */
+  api: string;
 }
 
-interface Setup extends SetupParams
+const defaultOptions = 
 {
-  realm: string;
-}
+  realm: 'https://login.unolog.in',
+};
 
 // app settings
-let options : Setup | null = null;
+let options : Options | null = null;
 
 /**
- * @returns API url for current realm
+ * API url for current realm
+ * @param realm realm URL
+ * @returns {string} API URL
  */
-export function getAPIUrl()
+function getAPIUrlFromRealm(realm : string) : string
 {
-  const realm = get().realm;
-
   if (realm.startsWith('https://login'))
   {
     return realm.replace('https://login', 'https://api');
   }
   else 
   {
-    const apiUrl = get().api;
-    
-    if (apiUrl)
-    {
-      return apiUrl;
-    }
-    else 
-    {
-      throw Error(
-        'Invalid configuration! Missing "api" in options.',
-      );
-    }
+    throw Error(
+      'Invalid configuration! Missing "api" in options.',
+    );
   }
 }
 
@@ -55,23 +54,32 @@ export function getAPIUrl()
  * @returns void 
  */
 export function setup(
-  { appId, realm } : SetupParams
+  params : Pick<Options, 'appId'> & Partial<Options>,
 ) : void
 {
+  const api = 
+    params.api ||
+    getAPIUrlFromRealm(
+      params.realm || defaultOptions.realm,
+    );
+
   options = 
-  {  
-    realm: realm || 'https://login.unolog.in',
-    appId,
+  {
+    ...defaultOptions,
+    ...params,
+    api,
   };
 }
 
 /** @returns options */
-export function get() : Setup
+export function get() : Options
 {
-  if (!options)
+  if (options)
+  {
+    return options;
+  }
+  else
   {
     throw new Error('Please call setup(...) before using the library.');
   }
-
-  return options;
 }

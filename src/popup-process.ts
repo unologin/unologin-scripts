@@ -1,22 +1,13 @@
 
-import { openCenteredPopup } from './popup';
+import {
+  openCenteredPopup, PopupMessage, PopupWindow,
+} from './popup';
 
 import * as options from './options';
 
-const oAuthProviders = 
-[
-  'email',
-  'google',
-];
-
-export interface LoginOptions
-{
-  userClass: string;
-  mode?: 'login' | 'register';
-  code?: string;
-  authMethod?: typeof oAuthProviders[number];
-}
-
+/**
+ * @internal
+ */
 interface PopupParams
 {
   url : URL;
@@ -25,11 +16,13 @@ interface PopupParams
   height?: number;
 }
 
-// list of all processes that are currently active
-const processes : { [k: string]: PopupProcess } = {};
+export type LoginResponse =
+{
+  success: boolean;
+}
 
 export type ClientLoginEventHandler = (
-  msg : { success: boolean },
+  msg : LoginResponse,
   event : MessageEvent,
 ) => unknown;
 
@@ -39,19 +32,54 @@ export type ClientLoginEventHandler = (
  */
 export default class PopupProcess
 {
-  public readonly popup: Window | null;
+  // list of all processes that are currently active
+  private static processes : { [k: string]: PopupProcess } = {};
+
+  public readonly popup: PopupWindow | null;
+
+  private closeListener : ReturnType<typeof setInterval>;
 
   public readonly messageHandlers = 
   {
     '_uno_onLoginInternal': <ClientLoginEventHandler[]>[],
+    '_uno_onLoginClosed': <((msg: { success: boolean }) => void)[]>[],
   }
 
   /** */
-  constructor({url, title, width, height} : PopupParams)
+  constructor({ url, title, width, height } : PopupParams)
   {
     this.popup = openCenteredPopup(url, title, width, height);
 
-    window.addEventListener('message', this.onMessage.bind(this));
+    window.addEventListener(
+      'message',
+      (msg) => this.onMessage(msg),
+    );
+
+    this.onClosed(
+      () => clearInterval(this.closeListener),
+    );
+    
+    this.onClosed(
+      () => this.deleteFromCache(),
+    );
+
+    this.onLogin(
+      () => clearInterval(this.closeListener),
+    );
+
+    this.closeListener = setInterval(
+      () => 
+      {
+        if (!this.isActive())
+        {
+          this.runHandlers(
+            this.messageHandlers._uno_onLoginClosed,
+            { success: false },
+          );
+        }
+      },
+      500,
+    );
   }
 
 
@@ -60,24 +88,67 @@ export default class PopupProcess
    * @param event event 
    * @returns {Promise<void>} void
    */
-  private onMessage(event : MessageEvent)
+  public onMessage(event : PopupMessage)
   {
-    const realm = new URL(options.get().realm);
-
-    if (
-      event.origin === (realm.protocol + '//' + realm.host) && 
-      event.source === this.popup
-    )
+    if (this.isMessageFromPopup(event))
     {
-      const msg = JSON.parse(event.data);
+      let msg;
+      
+      try 
+      {
+        msg = JSON.parse(event.data);
+      }
+      catch (e)
+      {
+        throw new Error('Received invalid message: ' + event.data); 
+      }
 
       const handlers = msg.id in this.messageHandlers ? 
         this.messageHandlers[msg.id as keyof typeof this.messageHandlers]:
         null
       ;
 
-      handlers?.forEach((fn) => fn(msg, event));
+      handlers && this.runHandlers(handlers, msg, event as MessageEvent);
     }
+  }
+
+  /**
+   * 
+   * @param event event
+   * @returns boolean
+   */
+  public isMessageFromPopup(event : PopupMessage)
+  {
+    const realm = new URL(options.get().realm);
+
+    return (
+      event.origin === (realm.protocol + '//' + realm.host) && 
+      event.source === this.popup
+    );
+  }
+
+  /**
+   * Runs handlers and removes them.
+   * @param handlers handlers
+   * @param args args
+   * 
+   * @returns Promise<void[]>
+   */
+  private async runHandlers<Args extends Array<any>>(
+    handlers : ((...args : Args) => unknown)[],
+    ...args : Args
+  )
+  {
+    let handler;
+
+    const results = [];
+
+    while (handler = handlers.pop())
+    {
+      results.push(handler(...args));
+    }
+
+    return Promise.all(results);
   }
 
   /**
@@ -87,6 +158,15 @@ export default class PopupProcess
   public onLogin(fn : ClientLoginEventHandler)
   {
     this.messageHandlers._uno_onLoginInternal.push(fn);
+  }
+
+  /**
+   * @param fn handler function
+   * @returns void
+   */
+  public onClosed(fn : () => unknown)
+  {
+    this.messageHandlers._uno_onLoginClosed.push(fn);
   }
 
   /** @returns true if the popup is still open */
@@ -101,7 +181,6 @@ export default class PopupProcess
    */
   focus() : void
   {
-    // @ts-ignore
     this.popup?.focus();
   }
 
@@ -111,8 +190,20 @@ export default class PopupProcess
    */
   close() : void
   {
-    // @ts-ignore
     this.popup?.close();
+    this.deleteFromCache();
+  }
+
+  /**
+   * @returns void
+   */
+  private deleteFromCache()
+  {
+    const entry = Object.entries(PopupProcess.processes).find(
+      ([, p]) => p === this,
+    );
+
+    entry && delete PopupProcess.processes[entry[0]];
   }
 
   /**
@@ -124,7 +215,7 @@ export default class PopupProcess
   {
     const id = params.url.href;
 
-    const process = processes[id];
+    const process = PopupProcess.processes[id];
 
     // if the process is already registered and still running
     if (process && process.isActive())
@@ -135,104 +226,7 @@ export default class PopupProcess
     }
     else
     {
-      return processes[id] = new PopupProcess(params);
+      return PopupProcess.processes[id] = new PopupProcess(params);
     }
   }
-}
-
-/**
- * Creates a unologin url based on the realm from a path and a query object
- * 
- * @param path relative path
- * @param query query object
- * 
- * @returns url
- */
-function createUrl(path : string, query : object) : URL
-{
-  const url = new URL(path, options.get().realm);
-
-  for (const [k, v] of Object.entries(query))
-  {
-    url.searchParams.set(k, v);
-  }
-
-  return url;
-}
-
-/**
- * @internal
- * @returns default values for login options
- */
-function getDefaultLoginOptions()
-{
-  return {
-    client: 'Web',
-    appId: options.get().appId,
-  };
-}
-
-/**
- * Starts the login process.
- * 
- * @param loginOptions containing the userClass 
- * @returns void
- */
-export function startLogin(loginOptions : LoginOptions) : Promise<void>
-{
-  loginOptions = {
-    ...getDefaultLoginOptions(),
-    ...loginOptions,
-  };
-
-  const loginUrl = createUrl(
-    '/', 
-    loginOptions
-  );
-
-  let url : URL;
-
-  const provId = loginOptions.authMethod;
-
-  if (provId === 'email' || !provId)
-  {
-    url = loginUrl;
-  }
-  else 
-  {
-    url = new URL(
-      '/initial-auth/' + provId,
-      options.getAPIUrl(),
-    );
-
-    url.searchParams.set(
-      'loginUrl',
-      encodeURIComponent(loginUrl.href),
-    );
-  }
-
-  const process = PopupProcess.start(
-    {
-      url,
-      title: 'unolog·in',
-    }
-  );
-
-  return new Promise<void>(
-    (resolve, reject) => process.onLogin(
-      ({ success }, event) => 
-      {
-        process.close();
-
-        if (success)
-        {
-          resolve();
-        }
-        else 
-        {
-          reject(event);
-        }
-      }
-    )
-  );
 }

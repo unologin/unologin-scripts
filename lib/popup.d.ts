@@ -1,3 +1,7 @@
+export type PopupWindow = Pick<Window, 'closed' | 'close' | 'focus'>;
+export type PopupMessage = Pick<MessageEvent, 'origin' | 'data'> & {
+    source: PopupWindow | MessageEventSource | null;
+};
 /**
  * Opens a centered popup or redirects the user.
  *
@@ -8,4 +12,4 @@
  *
  * @returns {Window} popup
  */
-export declare function openCenteredPopup(url: URL, title: string, width?: number, height?: number): Window | null;
+export declare function openCenteredPopup(url: URL, title: string, width?: number, height?: number): PopupWindow | null;

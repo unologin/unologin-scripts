@@ -1,18 +1,16 @@
 
-# unologin-scripts 
-
 Frontend SDK for interfacing with [unolog·in](https://unolog.in).
 
 ## Installation
 
 ```
-npm install unologin-scripts
+npm install @unologin/web-sdk
 ```
 
 or
 
 ```
-yarn add unologin-scripts
+yarn add @unologin/web-sdk
 ```
 
 ## Typescript
@@ -26,10 +24,9 @@ The below examples will use plain javascript for generality.
 Before using the library, make sure to connect the SDK with your app via your apps ```appId```.
 
 ```javascript
-import unologin from 'unologin-scripts';
+import unologin from '@unologin/web-sdk';
 
 unologin.setup(
-  // either put your appId in here or your env
   { appId: process.env.UNOLOGIN_APPID }
 );
 ```
@@ -38,9 +35,9 @@ unologin.setup(
 Use the ```startLogin(...)``` function in order to initiate the login flow. 
 
 ```javascript
-import unologin from 'unologin-scripts';
+import unologin from '@unologin/web-sdk';
 // alternatively: 
-import { startLogin } from 'unologin-scripts';
+import { startLogin } from '@unologin/web-sdk';
 
 // then call startLogin once the user clicks your login button
 

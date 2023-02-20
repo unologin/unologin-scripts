@@ -1,0 +1,18 @@
+{
+  "env":
+  {
+    "node": true,
+    "commonjs": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends":"@unologin/eslint-config",
+  "parserOptions":
+  {
+    "ecmaVersion":12
+  },
+  "globals":{
+    "MessageEventSource": true,
+    "__base": true
+  }
+}

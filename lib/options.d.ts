@@ -1,15 +1,19 @@
-export interface SetupParams {
-    realm?: string;
-    api?: string;
+export interface Options {
+    /**
+     * Your appId.
+     */
     appId: string;
-}
-interface Setup extends SetupParams {
+    /**
+     * Which base URL to use for the login flow.
+     * Defaults to https://login.unolog.in
+     */
     realm: string;
+    /**
+     * Optional API URL the frontend is using.
+     * May be inferred from realm.
+     */
+    api: string;
 }
-/**
- * @returns API url for current realm
- */
-export declare function getAPIUrl(): string;
 /**
  * Allows setting appId and realm.
  *
@@ -17,7 +21,6 @@ export declare function getAPIUrl(): string;
  *
  * @returns void
  */
-export declare function setup({ appId, realm }: SetupParams): void;
+export declare function setup(params: Pick<Options, 'appId'> & Partial<Options>): void;
 /** @returns options */
-export declare function get(): Setup;
-export {};
+export declare function get(): Options;

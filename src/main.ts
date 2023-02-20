@@ -1,23 +1,16 @@
 
-import * as PopupProcess from './popup-process';
 import * as options from './options';
+import * as login from './login';
 
-export const startLogin = PopupProcess.startLogin;
+export const startLogin = login.startLogin;
+export type LoginOptions = login.LoginOptions;
+export const isLoggedIn = login.isLoggedIn;
 export const setup = options.setup;
-/**
- * @returns true if the user appears to be logged in.
- * DO NOT USE FOR AUTH
- */
-export function isLoggedIn() : boolean
-{
-  return !!(
-    document.cookie.match(/^(.*;)?\s*_uno_loginState\s*=\s*[^;]+(.*)?$/)
-  );
-}
+
 
 export default 
 {
-  startLogin: PopupProcess.startLogin,
+  startLogin: login.startLogin,
   setup: options.setup,
-  isLoggedIn: isLoggedIn,
+  isLoggedIn: login.isLoggedIn,
 };
