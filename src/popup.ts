@@ -25,9 +25,13 @@ export function openCenteredPopup(
   title : string, 
   width: number = 370, 
   height: number = 562,
-
 ) : PopupWindow | null
 {
+  if (typeof(window) === 'undefined')
+  {
+    return null;
+  }
+
   const top = window.top || window.parent || window;
 
   const y = top.outerHeight / 2 + top.screenY - ( height / 2);

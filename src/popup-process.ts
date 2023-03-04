@@ -50,10 +50,13 @@ export default class PopupProcess
   {
     this.popup = openCenteredPopup(url, title, width, height);
 
-    window.addEventListener(
-      'message',
-      (msg) => this.onMessage(msg),
-    );
+    if (typeof(window) !== 'undefined')
+    {
+      window.addEventListener(
+        'message',
+        (msg) => this.onMessage(msg),
+      );
+    }
 
     this.onClosed(
       () => clearInterval(this.closeListener),
