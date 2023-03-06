@@ -1,6 +1,6 @@
 
-import * as options from './options';
-import * as login from './login';
+import * as options from './options.js';
+import * as login from './login.js';
 
 export const LoginFlowError = login.LoginFlowError;
 

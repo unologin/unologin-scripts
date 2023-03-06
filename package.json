@@ -1,16 +1,16 @@
 {
   "name": "@unologin/web-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "unolog·in web client SDK",
+  "main": "lib/main.js",
   "type": "module",
-  "main": "main.js",
   "sideEffects": true,
   "files": [
-    "./**"
+    "lib/**"
   ],
   "scripts": {
-    "build": "tsc && cp package.json README.md LICENSE ./lib/",
-    "build-cjs": "tsc --outDir ./cjs --module commonjs && cp package.json cjs/",
+    "build": "tsc",
+    "build-cjs": "tsc --outDir ./cjs --module commonjs",
     "test": "jest",
     "lint": "eslint --fix --ext .ts ./src ./test"
   },
@@ -25,6 +25,7 @@
     "husky": "^8.0.3",
     "jest": "^29.4.3",
     "jest-environment-jsdom": "^29.4.3",
+    "jest-ts-webcompat-resolver": "^1.0.0",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
     "typedoc": "^0.23.25",

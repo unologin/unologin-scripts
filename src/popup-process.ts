@@ -1,9 +1,9 @@
 
 import {
   openCenteredPopup, PopupMessage, PopupWindow,
-} from './popup';
+} from './popup.js';
 
-import * as options from './options';
+import * as options from './options.js';
 
 /**
  * @internal

@@ -1,4 +1,4 @@
-import { PopupMessage, PopupWindow } from './popup';
+import { PopupMessage, PopupWindow } from './popup.js';
 /**
  * @internal
  */

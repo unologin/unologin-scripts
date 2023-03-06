@@ -40,8 +40,6 @@ Use the ```startLogin(...)``` function in order to initiate the login flow.
 
 ```javascript
 import unologin from '@unologin/web-sdk';
-// or 
-import { startLogin } from '@unologin/web-sdk';
 
 /**
  * Typically, you would call startLogin in
@@ -100,7 +98,7 @@ unologin.startLogin(...).then(() =>
 
 ## Detecting a login cookie
 
-You can use ```unologin.isLoggedIn()``` to check if a user is logged in at any time. This will check for the presence of a cookie that is set along side the actual login cookie. 
+You can use ```unologin.isLoggedIn()``` to check if a user is logged in at any time. This will check for the presence of a javascript-readable state cookie that is set along side the actual login cookie. 
 
 **IMPORTANT:** Do not use ```isLoggedIn()``` or *any* other client-side logic as a security measure. 
 

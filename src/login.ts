@@ -2,9 +2,9 @@
  * @module login
  */
 
-import * as options from './options';
+import * as options from './options.js';
 
-import PopupProcess from './popup-process';
+import PopupProcess from './popup-process.js';
 
 export enum LoginFlowErrorType
 {
