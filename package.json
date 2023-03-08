@@ -3,13 +3,20 @@
   "version": "1.0.4",
   "description": "unolog·in web client SDK",
   "main": "lib/main.js",
+  "exports": {
+    ".": {
+      "require": "./cjs/main.js",
+      "import": "./lib/main.js"
+    }
+  },
   "type": "module",
   "sideEffects": true,
   "files": [
-    "lib/**"
+    "lib/**",
+    "cjs/**"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && yarn build-cjs",
     "build-cjs": "tsc --outDir ./cjs --module commonjs",
     "test": "jest",
     "lint": "eslint --fix --ext .ts ./src ./test"

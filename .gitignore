@@ -1,7 +1,6 @@
 *.log
 .vscode
 node_modules/
-cjs/
 coverage/
 # npm pack output
 unologin-web-sdk-*.tgz 
