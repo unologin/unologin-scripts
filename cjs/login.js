@@ -84,7 +84,11 @@ exports.createOAuthUrl = createOAuthUrl;
 function createLoginUrl(loginOptions = {}) {
     loginOptions = Object.assign({ client: 'Web', appId: options.get().appId, userClass: 'users_default' }, loginOptions);
     const provId = loginOptions.authMethod;
-    const loginUrl = new URL('/', options.get().realm);
+    const realm = options.get().realm;
+    const path = realm ?
+        new URL(options.get().realm).pathname :
+        '/';
+    const loginUrl = new URL(path, realm);
     for (const [k, v] of Object.entries(loginOptions)) {
         loginUrl.searchParams.set(k, v);
     }
