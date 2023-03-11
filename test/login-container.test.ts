@@ -1,8 +1,11 @@
 
 import { setup } from '../src/options';
+
 import * as Popup from '../src/popup';
 
-import PopupProcess from '../src/popup-process';
+import LoginContainer, {
+  LoginWindowPopup,
+} from '../src/login-container';
 
 /**
  * 
@@ -25,7 +28,7 @@ implements Popup.PopupWindow
 
 const windowOpen = jest.spyOn(Popup, 'openCenteredPopup');
 
-describe('PopupProcess', () => 
+describe('LoginContainer', () => 
 {
   const params = 
   {
@@ -53,12 +56,12 @@ describe('PopupProcess', () =>
 
   test('start focuses already started popup', () => 
   {
-    const popup = PopupProcess.start(params);
+    const popup = LoginContainer.start(new LoginWindowPopup(params));
 
     expect(windowOpen)
       .toHaveBeenCalledTimes(1);
 
-    expect(PopupProcess.start(params))
+    expect(LoginContainer.start(new LoginWindowPopup(params)))
       .toBe(popup);
 
     expect(windowOpen)
@@ -89,7 +92,7 @@ describe('PopupProcess', () =>
       (fn) => intervals.push(fn) as any,
     );
 
-    const popup = PopupProcess.start(params);
+    const popup = LoginContainer.start(new LoginWindowPopup(params));
 
     const onClosed = jest.fn();
 
@@ -138,9 +141,9 @@ describe('PopupProcess', () =>
   {
     setup({ appId: '' });
 
-    const popup = PopupProcess.start(params);
+    const popup = LoginContainer.start(new LoginWindowPopup(params));
 
-    type Case = [Parameters<PopupProcess['isMessageFromPopup']>[0], boolean];
+    type Case = [Parameters<LoginContainer['isMessageFromPopup']>[0], boolean];
 
     const cases : Case[] = 
     [
@@ -181,7 +184,7 @@ describe('PopupProcess', () =>
 
   test('onMessage', () => 
   {
-    const popup = PopupProcess.start(params);
+    const popup = LoginContainer.start(new LoginWindowPopup(params));
 
     const onLogin = jest.fn();
 

@@ -1,14 +1,25 @@
 import * as options from './options.js';
 import * as login from './login.js';
-export declare const LoginFlowError: typeof login.LoginFlowError;
+import * as loginContainer from './login-container';
 export type LoginFlowErrorType = login.LoginFlowErrorType;
-export declare const startLogin: typeof login.startLogin;
 export type LoginOptions = login.LoginOptions;
+export declare const LoginFlowError: typeof login.LoginFlowError;
+export declare const LoginContainer: typeof loginContainer.default;
+export type LoginWindow = loginContainer.LoginWindow;
+export declare const LoginWindowPopup: typeof loginContainer.LoginWindowPopup;
+export declare const startLogin: typeof login.startLogin;
+export declare const startLoginContainer: typeof login.startLoginContainer;
+export declare const awaitLoginContainer: typeof login.awaitLoginContainer;
 export declare const isLoggedIn: typeof login.isLoggedIn;
 export declare const setup: typeof options.setup;
 declare const _default: {
+    LoginFlowError: typeof login.LoginFlowError;
     startLogin: typeof login.startLogin;
-    setup: typeof options.setup;
+    startLoginContainer: typeof login.startLoginContainer;
+    awaitLoginContainer: typeof login.awaitLoginContainer;
     isLoggedIn: typeof login.isLoggedIn;
+    setup: typeof options.setup;
+    LoginContainer: typeof loginContainer.default;
+    LoginWindowPopup: typeof loginContainer.LoginWindowPopup;
 };
 export default _default;

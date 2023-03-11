@@ -25,13 +25,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isLoggedIn = exports.startLogin = exports.createLoginUrl = exports.createOAuthUrl = exports.AuthMethod = exports.LoginFlowError = exports.LoginFlowErrorType = void 0;
+exports.isLoggedIn = exports.startLogin = exports.awaitLoginContainer = exports.startLoginContainer = exports.createLoginUrl = exports.createOAuthUrl = exports.AuthMethod = exports.LoginFlowError = exports.LoginFlowErrorType = void 0;
 const options = __importStar(require("./options.js"));
-const popup_process_js_1 = __importDefault(require("./popup-process.js"));
+const login_container_js_1 = __importStar(require("./login-container.js"));
 var LoginFlowErrorType;
 (function (LoginFlowErrorType) {
     LoginFlowErrorType["Unknown"] = "Unknown";
@@ -105,20 +102,36 @@ exports.createLoginUrl = createLoginUrl;
  * Returns a promise that resolves as soon as the popup closes.
  *
  * @param loginOptions containing the userClass
+ * @param buildLoginWindow optional container to render the login flow in
  *
  * @returns Promise<void>
  *
  * @throws error {@link LoginFlowError}
  */
-function startLogin(loginOptions = {}) {
+function startLoginContainer(loginOptions = {}, buildLoginWindow) {
     const url = createLoginUrl(loginOptions);
-    const popup = popup_process_js_1.default.start({
-        url,
-        title: 'unolog·in',
-    });
+    const loginWindow = buildLoginWindow ?
+        buildLoginWindow(url) :
+        new login_container_js_1.LoginWindowPopup({
+            url,
+            title: 'unolog·in',
+        });
+    return login_container_js_1.default.start(loginWindow);
+}
+exports.startLoginContainer = startLoginContainer;
+/**
+ * Wraps login container in a promise.
+ *
+ * @param container container
+ *
+ * @returns Promise<void>
+ *
+ * @throws LoginFlowError {@link LoginFlowError}
+ */
+function awaitLoginContainer(container) {
     return new Promise((resolve, reject) => {
-        popup.onLogin(({ success }) => {
-            popup.close();
+        container.onLogin(({ success }) => {
+            container.close();
             if (success) {
                 resolve();
             }
@@ -126,8 +139,24 @@ function startLogin(loginOptions = {}) {
                 reject(new LoginFlowError('Unknown cause.', LoginFlowErrorType.Unknown));
             }
         });
-        popup.onClosed(() => reject(new LoginFlowError('Login flow closed by user.', LoginFlowErrorType.ClosedByUser)));
+        container.onClosed(() => resolve());
     });
+}
+exports.awaitLoginContainer = awaitLoginContainer;
+/**
+ * Starts the login process and creates a promise around it.
+ * Returns a promise that resolves as soon as the popup closes.
+ *
+ * @param loginOptions containing the userClass
+ * @param buildLoginWindow optional container to render the login flow in
+ *
+ * @returns Promise<void>
+ *
+ * @throws LoginFlowError {@link LoginFlowError}
+ */
+function startLogin(loginOptions = {}, buildLoginWindow) {
+    const container = startLoginContainer(loginOptions, buildLoginWindow);
+    return awaitLoginContainer(container);
 }
 exports.startLogin = startLogin;
 /**

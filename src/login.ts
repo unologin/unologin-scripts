@@ -4,7 +4,10 @@
 
 import * as options from './options.js';
 
-import PopupProcess from './popup-process.js';
+import LoginContainer, { 
+  LoginWindow, 
+  LoginWindowPopup, 
+} from './login-container.js';
 
 export enum LoginFlowErrorType
 {
@@ -143,37 +146,56 @@ export function createLoginUrl(
   }
 }
 
-
 /**
  * Starts the login process.
  * Returns a promise that resolves as soon as the popup closes.
  * 
  * @param loginOptions containing the userClass 
+ * @param buildLoginWindow optional container to render the login flow in
  * 
  * @returns Promise<void>
  * 
  * @throws error {@link LoginFlowError}
  */
-export function startLogin(
+export function startLoginContainer(
   loginOptions : LoginOptions = {},
-) : Promise<void>
+  buildLoginWindow?: (url : URL) => LoginWindow,
+)
 {
   const url = createLoginUrl(loginOptions);
  
-  const popup = PopupProcess.start(
-    {
-      url,
-      title: 'unolog·in',
-    },
-  );
- 
+  const loginWindow = buildLoginWindow ?
+    buildLoginWindow(url) : 
+    new LoginWindowPopup(
+      {
+        url,
+        title: 'unolog·in',
+      },
+    );
+
+  return LoginContainer.start(loginWindow);
+}
+
+/**
+ * Wraps login container in a promise.
+ * 
+ * @param container container
+ * 
+ * @returns Promise<void>
+ * 
+ * @throws LoginFlowError {@link LoginFlowError}
+ */
+export function awaitLoginContainer(
+  container : LoginContainer,
+)
+{
   return new Promise<void>(
     (resolve, reject) => 
     {
-      popup.onLogin(
+      container.onLogin(
         ({ success }) => 
         {
-          popup.close();
+          container.close();
    
           if (success)
           {
@@ -191,16 +213,35 @@ export function startLogin(
         },
       );
  
-      popup.onClosed(
-        () => reject(
-          new LoginFlowError(
-            'Login flow closed by user.',
-            LoginFlowErrorType.ClosedByUser,
-          ),
-        ),
+      container.onClosed(
+        () => resolve(),
       );
     },
   );
+}
+
+/**
+ * Starts the login process and creates a promise around it.
+ * Returns a promise that resolves as soon as the popup closes.
+ * 
+ * @param loginOptions containing the userClass 
+ * @param buildLoginWindow optional container to render the login flow in
+ * 
+ * @returns Promise<void>
+ * 
+ * @throws LoginFlowError {@link LoginFlowError}
+ */
+export function startLogin(
+  loginOptions : LoginOptions = {},
+  buildLoginWindow?: (url : URL) => LoginWindow,
+) : Promise<void>
+{
+  const container = startLoginContainer(
+    loginOptions,
+    buildLoginWindow,
+  );
+ 
+  return awaitLoginContainer(container);
 }
 
 /**

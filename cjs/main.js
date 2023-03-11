@@ -23,15 +23,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setup = exports.isLoggedIn = exports.startLogin = exports.LoginFlowError = void 0;
+exports.setup = exports.isLoggedIn = exports.awaitLoginContainer = exports.startLoginContainer = exports.startLogin = exports.LoginWindowPopup = exports.LoginContainer = exports.LoginFlowError = void 0;
 const options = __importStar(require("./options.js"));
 const login = __importStar(require("./login.js"));
+const loginContainer = __importStar(require("./login-container"));
 exports.LoginFlowError = login.LoginFlowError;
+exports.LoginContainer = loginContainer.default;
+exports.LoginWindowPopup = loginContainer.LoginWindowPopup;
 exports.startLogin = login.startLogin;
+exports.startLoginContainer = login.startLoginContainer;
+exports.awaitLoginContainer = login.awaitLoginContainer;
 exports.isLoggedIn = login.isLoggedIn;
 exports.setup = options.setup;
 exports.default = {
-    startLogin: login.startLogin,
-    setup: options.setup,
-    isLoggedIn: login.isLoggedIn,
+    LoginFlowError: exports.LoginFlowError,
+    startLogin: exports.startLogin,
+    startLoginContainer: exports.startLoginContainer,
+    awaitLoginContainer: exports.awaitLoginContainer,
+    isLoggedIn: exports.isLoggedIn,
+    setup: exports.setup,
+    LoginContainer: exports.LoginContainer,
+    LoginWindowPopup: exports.LoginWindowPopup,
 };

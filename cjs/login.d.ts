@@ -1,6 +1,7 @@
 /**
  * @module login
  */
+import LoginContainer, { LoginWindow } from './login-container.js';
 export declare enum LoginFlowErrorType {
     Unknown = "Unknown",
     ClosedByUser = "ClosedByUser"
@@ -71,12 +72,35 @@ export declare function createLoginUrl(loginOptions?: LoginOptions): URL;
  * Returns a promise that resolves as soon as the popup closes.
  *
  * @param loginOptions containing the userClass
+ * @param buildLoginWindow optional container to render the login flow in
  *
  * @returns Promise<void>
  *
  * @throws error {@link LoginFlowError}
  */
-export declare function startLogin(loginOptions?: LoginOptions): Promise<void>;
+export declare function startLoginContainer(loginOptions?: LoginOptions, buildLoginWindow?: (url: URL) => LoginWindow): LoginContainer;
+/**
+ * Wraps login container in a promise.
+ *
+ * @param container container
+ *
+ * @returns Promise<void>
+ *
+ * @throws LoginFlowError {@link LoginFlowError}
+ */
+export declare function awaitLoginContainer(container: LoginContainer): Promise<void>;
+/**
+ * Starts the login process and creates a promise around it.
+ * Returns a promise that resolves as soon as the popup closes.
+ *
+ * @param loginOptions containing the userClass
+ * @param buildLoginWindow optional container to render the login flow in
+ *
+ * @returns Promise<void>
+ *
+ * @throws LoginFlowError {@link LoginFlowError}
+ */
+export declare function startLogin(loginOptions?: LoginOptions, buildLoginWindow?: (url: URL) => LoginWindow): Promise<void>;
 /**
  * Check if the user *appears* to be logged in from the client side.
  * *Do NOT use for authentication* as the result may be tempered with.

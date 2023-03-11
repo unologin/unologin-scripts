@@ -9,7 +9,11 @@ import {
 } from '../src/login';
 
 import unologin from '../src/main';
-import PopupProcess, { LoginResponse } from '../src/popup-process';
+
+import LoginContainer, { 
+  LoginResponse, 
+} from '../src/login-container';
+
 import controlledAsync from './util/controlled-async';
 
 describe('createLoginUrl', () => 
@@ -136,16 +140,16 @@ describe('isLoggedIn', () =>
 
 describe('startLogin', () => 
 {
-  const startPopup = jest.spyOn(PopupProcess, 'start');
+  const startPopup = jest.spyOn(LoginContainer, 'start');
   const msgEvent = new MessageEvent('postMessage');
 
-  it('Rejects on window being closed by user.', async () =>
+  it('Resolves on window being closed by user.', async () =>
   {
     const loginController = controlledAsync<LoginResponse>();
 
     let closePopup : () => void;
 
-    const popupMock : Partial<PopupProcess> = 
+    const popupMock : Partial<LoginContainer> = 
     {
       close: jest.fn(() => {}),
       onClosed: jest.fn((fn) => { closePopup = fn; }),
@@ -155,29 +159,26 @@ describe('startLogin', () =>
     };
 
     startPopup.mockImplementation(
-      () => popupMock as PopupProcess,
+      () => popupMock as LoginContainer,
     );
 
     const login = startLogin();
 
-    await expect(async () => 
+    const fn = async () => 
     {
       closePopup();
 
       await login;
-    }).rejects.toStrictEqual(
-      new LoginFlowError(
-        'Login flow closed by user.',
-        LoginFlowErrorType.ClosedByUser,
-      ),
-    );
+    };
+
+    await fn();
   });
 
   it('Resolves after successful login.', async () =>
   {
     const loginController = controlledAsync<LoginResponse>();
 
-    const popupMock : Partial<PopupProcess> = 
+    const popupMock : Partial<LoginContainer> = 
     {
       close: jest.fn(() => {}),
       onClosed: jest.fn(() => {}),
@@ -187,7 +188,7 @@ describe('startLogin', () =>
     };
 
     startPopup.mockImplementation(
-      () => popupMock as PopupProcess,
+      () => popupMock as LoginContainer,
     );
 
     const login = startLogin();
@@ -201,7 +202,7 @@ describe('startLogin', () =>
   {
     const loginController = controlledAsync<LoginResponse>();
 
-    const popupMock : Partial<PopupProcess> = 
+    const popupMock : Partial<LoginContainer> = 
     {
       close: jest.fn(() => {}),
       onClosed: jest.fn(() => {}),
@@ -211,7 +212,7 @@ describe('startLogin', () =>
     };
 
     startPopup.mockImplementation(
-      () => popupMock as PopupProcess,
+      () => popupMock as LoginContainer,
     );
 
     const login = startLogin();
