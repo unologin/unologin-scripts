@@ -214,7 +214,12 @@ export function awaitLoginContainer(
       );
  
       container.onClosed(
-        () => resolve(),
+        () => reject(
+          new LoginFlowError(
+            'Login flow closed by user.',
+            LoginFlowErrorType.ClosedByUser,
+          ),
+        ),
       );
     },
   );

@@ -139,7 +139,7 @@ function awaitLoginContainer(container) {
                 reject(new LoginFlowError('Unknown cause.', LoginFlowErrorType.Unknown));
             }
         });
-        container.onClosed(() => resolve());
+        container.onClosed(() => reject(new LoginFlowError('Login flow closed by user.', LoginFlowErrorType.ClosedByUser)));
     });
 }
 exports.awaitLoginContainer = awaitLoginContainer;

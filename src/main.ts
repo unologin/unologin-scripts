@@ -5,6 +5,9 @@ import * as loginContainer from './login-container';
 
 export type LoginFlowErrorType = login.LoginFlowErrorType;
 
+// eslint-disable-next-line no-redeclare
+export const LoginFlowErrorType = login.LoginFlowErrorType;
+
 export type LoginOptions = login.LoginOptions;
 
 export const LoginFlowError = login.LoginFlowError;
@@ -27,6 +30,7 @@ export const setup = options.setup;
 
 export default {
   LoginFlowError,
+  LoginFlowErrorType,
   startLogin,
   startLoginContainer,
   awaitLoginContainer,

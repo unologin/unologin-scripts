@@ -2,6 +2,7 @@ import * as options from './options.js';
 import * as login from './login.js';
 import * as loginContainer from './login-container';
 export type LoginFlowErrorType = login.LoginFlowErrorType;
+export declare const LoginFlowErrorType: typeof login.LoginFlowErrorType;
 export type LoginOptions = login.LoginOptions;
 export declare const LoginFlowError: typeof login.LoginFlowError;
 export declare const LoginContainer: typeof loginContainer.default;
@@ -14,6 +15,7 @@ export declare const isLoggedIn: typeof login.isLoggedIn;
 export declare const setup: typeof options.setup;
 declare const _default: {
     LoginFlowError: typeof login.LoginFlowError;
+    LoginFlowErrorType: typeof login.LoginFlowErrorType;
     startLogin: typeof login.startLogin;
     startLoginContainer: typeof login.startLoginContainer;
     awaitLoginContainer: typeof login.awaitLoginContainer;

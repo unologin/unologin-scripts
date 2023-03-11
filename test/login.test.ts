@@ -143,7 +143,7 @@ describe('startLogin', () =>
   const startPopup = jest.spyOn(LoginContainer, 'start');
   const msgEvent = new MessageEvent('postMessage');
 
-  it('Resolves on window being closed by user.', async () =>
+  it('Rejects on window being closed by user.', async () =>
   {
     const loginController = controlledAsync<LoginResponse>();
 
@@ -164,14 +164,17 @@ describe('startLogin', () =>
 
     const login = startLogin();
 
-    const fn = async () => 
+    await expect(async () => 
     {
       closePopup();
 
       await login;
-    };
-
-    await fn();
+    }).rejects.toStrictEqual(
+      new LoginFlowError(
+        'Login flow closed by user.',
+        LoginFlowErrorType.ClosedByUser,
+      ),
+    );
   });
 
   it('Resolves after successful login.', async () =>

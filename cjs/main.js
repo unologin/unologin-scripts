@@ -23,10 +23,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setup = exports.isLoggedIn = exports.awaitLoginContainer = exports.startLoginContainer = exports.startLogin = exports.LoginWindowPopup = exports.LoginContainer = exports.LoginFlowError = void 0;
+exports.setup = exports.isLoggedIn = exports.awaitLoginContainer = exports.startLoginContainer = exports.startLogin = exports.LoginWindowPopup = exports.LoginContainer = exports.LoginFlowError = exports.LoginFlowErrorType = void 0;
 const options = __importStar(require("./options.js"));
 const login = __importStar(require("./login.js"));
 const loginContainer = __importStar(require("./login-container"));
+// eslint-disable-next-line no-redeclare
+exports.LoginFlowErrorType = login.LoginFlowErrorType;
 exports.LoginFlowError = login.LoginFlowError;
 exports.LoginContainer = loginContainer.default;
 exports.LoginWindowPopup = loginContainer.LoginWindowPopup;
@@ -37,6 +39,7 @@ exports.isLoggedIn = login.isLoggedIn;
 exports.setup = options.setup;
 exports.default = {
     LoginFlowError: exports.LoginFlowError,
+    LoginFlowErrorType: exports.LoginFlowErrorType,
     startLogin: exports.startLogin,
     startLoginContainer: exports.startLoginContainer,
     awaitLoginContainer: exports.awaitLoginContainer,
