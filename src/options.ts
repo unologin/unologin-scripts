@@ -17,6 +17,13 @@ export interface Options
    * May be inferred from realm.
    */
   api: string;
+
+  /**
+   * Optional callback URL.
+   * Defaults to the first URL in the whitelist configured 
+   * on the dashboard.
+   */
+  callbackUrl?: URL | string;
 }
 
 const defaultOptions = 

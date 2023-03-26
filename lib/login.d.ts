@@ -49,6 +49,11 @@ export interface LoginOptions {
      * Defaults to asking the user.
      */
     authMethod?: AuthMethod;
+    /**
+     * Override the callbackUrl.
+     * Needs to be whitelisted in the dashboard.
+     */
+    callbackUrl?: URL | string;
 }
 /**
  * Creates a URL to the OAuth flow which in turn redirects to

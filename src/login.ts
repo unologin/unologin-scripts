@@ -8,6 +8,7 @@ import LoginContainer, {
   LoginWindow, 
   LoginWindowPopup, 
 } from './login-container.js';
+import { removeUndefined } from './util.js';
 
 export enum LoginFlowErrorType
 {
@@ -74,6 +75,12 @@ export interface LoginOptions
    * Defaults to asking the user.
    */
   authMethod?: AuthMethod;
+
+  /**
+   * Override the callbackUrl.
+   * Needs to be whitelisted in the dashboard.
+   */
+  callbackUrl?: URL | string;
 }
 
 /**
@@ -113,24 +120,20 @@ export function createLoginUrl(
   loginOptions : LoginOptions = {},
 ) : URL
 {
-  loginOptions = 
-  {
-    client: 'Web',
-    appId: options.get().appId,
-    userClass: 'users_default',
-    ...loginOptions,
-  };
+  loginOptions = removeUndefined(
+    {
+      client: 'Web',
+      appId: options.get().appId,
+      userClass: 'users_default',
+      callbackUrl: options.get().callbackUrl,
+      ...loginOptions,
+    },
+  );
 
   const provId = loginOptions.authMethod;
 
-  const realm = options.get().realm;
+  const loginUrl = new URL(options.get().realm);
 
-  const path = realm ?
-    new URL(options.get().realm).pathname :
-    '/';
-
-  const loginUrl = new URL(path, realm);
- 
   for (const [k, v] of Object.entries(loginOptions))
   {
     loginUrl.searchParams.set(k, v);

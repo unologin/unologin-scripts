@@ -29,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.isLoggedIn = exports.startLogin = exports.awaitLoginContainer = exports.startLoginContainer = exports.createLoginUrl = exports.createOAuthUrl = exports.AuthMethod = exports.LoginFlowError = exports.LoginFlowErrorType = void 0;
 const options = __importStar(require("./options.js"));
 const login_container_js_1 = __importStar(require("./login-container.js"));
+const util_js_1 = require("./util.js");
 var LoginFlowErrorType;
 (function (LoginFlowErrorType) {
     LoginFlowErrorType["Unknown"] = "Unknown";
@@ -79,13 +80,9 @@ exports.createOAuthUrl = createOAuthUrl;
  * @returns URL
  */
 function createLoginUrl(loginOptions = {}) {
-    loginOptions = Object.assign({ client: 'Web', appId: options.get().appId, userClass: 'users_default' }, loginOptions);
+    loginOptions = (0, util_js_1.removeUndefined)(Object.assign({ client: 'Web', appId: options.get().appId, userClass: 'users_default', callbackUrl: options.get().callbackUrl }, loginOptions));
     const provId = loginOptions.authMethod;
-    const realm = options.get().realm;
-    const path = realm ?
-        new URL(options.get().realm).pathname :
-        '/';
-    const loginUrl = new URL(path, realm);
+    const loginUrl = new URL(options.get().realm);
     for (const [k, v] of Object.entries(loginOptions)) {
         loginUrl.searchParams.set(k, v);
     }
