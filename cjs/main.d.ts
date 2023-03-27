@@ -8,6 +8,7 @@ export declare const LoginFlowError: typeof login.LoginFlowError;
 export declare const LoginContainer: typeof loginContainer.default;
 export type LoginWindow = loginContainer.LoginWindow;
 export declare const LoginWindowPopup: typeof loginContainer.LoginWindowPopup;
+export declare const LoginWindowIFrameExperimental: typeof loginContainer.LoginWindowIFrameExperimental;
 export declare const startLogin: typeof login.startLogin;
 export declare const startLoginContainer: typeof login.startLoginContainer;
 export declare const awaitLoginContainer: typeof login.awaitLoginContainer;

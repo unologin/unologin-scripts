@@ -63,7 +63,7 @@ export interface LoginWindow
   /** Initial login url. */
   url: URL;
   isActive: () => boolean;
-  start?: () => void;
+  start?: (container : LoginContainer) => void;
   focus: () => void;
   close: () => void;
   isEventSource: (e : PopupMessage) => boolean;
@@ -129,6 +129,82 @@ implements LoginWindow
   isEventSource(event : PopupMessage)
   {
     return event.source === this.popup;
+  }
+}
+
+export type LoginWindowIFrameExperimentalParams = 
+{
+  url: URL;
+  parentElement: HTMLElement;
+}
+
+/**
+ * Experimental iframe based login.
+ * @experimental
+ */
+export class LoginWindowIFrameExperimental
+implements LoginWindow
+{
+  private iframe : HTMLIFrameElement | null = null;
+
+  public url : URL;
+
+  /**
+   * @param url URL
+   */
+  constructor(
+    public params : LoginWindowIFrameExperimentalParams,
+  ) 
+  {
+    this.url = params.url;
+  }
+
+  /**
+   * 
+   * @param container loginContainer
+   * @returns void
+   */
+  start()
+  {
+    this.iframe = document.createElement('iframe');
+
+    this.iframe.src = this.url.href;
+
+    this.params.parentElement.appendChild(this.iframe);
+  }
+
+  /** @returns true if the popup is still open */
+  isActive() : boolean
+  {
+    return !!this.iframe;
+  }
+
+  /** 
+   * focuses the popup
+   * @returns {void}
+   */
+  focus() : void
+  {
+    this.iframe?.focus();
+  }
+
+  /**
+   * closes the popup
+   * @returns {void}
+   */
+  close() : void
+  {
+    this.iframe?.parentNode?.removeChild(this.iframe);
+  }
+
+  /**
+   * 
+   * @param event event
+   * @returns boolean
+   */
+  isEventSource(event : PopupMessage)
+  {
+    return event.source === this.iframe;
   }
 }
 
@@ -318,7 +394,7 @@ export default class LoginContainer
   /** @returns void */
   start()
   {
-    this.loginWindow.start?.();
+    this.loginWindow.start?.(this);
   }
 
   /** 

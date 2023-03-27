@@ -38,7 +38,7 @@ export interface LoginWindow {
     /** Initial login url. */
     url: URL;
     isActive: () => boolean;
-    start?: () => void;
+    start?: (container: LoginContainer) => void;
     focus: () => void;
     close: () => void;
     isEventSource: (e: PopupMessage) => boolean;
@@ -55,6 +55,47 @@ export declare class LoginWindowPopup implements LoginWindow {
      */
     constructor(params: PopupParams);
     /** @returns void */
+    start(): void;
+    /** @returns true if the popup is still open */
+    isActive(): boolean;
+    /**
+     * focuses the popup
+     * @returns {void}
+     */
+    focus(): void;
+    /**
+     * closes the popup
+     * @returns {void}
+     */
+    close(): void;
+    /**
+     *
+     * @param event event
+     * @returns boolean
+     */
+    isEventSource(event: PopupMessage): boolean;
+}
+export type LoginWindowIFrameExperimentalParams = {
+    url: URL;
+    parentElement: HTMLElement;
+};
+/**
+ * Experimental iframe based login.
+ * @experimental
+ */
+export declare class LoginWindowIFrameExperimental implements LoginWindow {
+    params: LoginWindowIFrameExperimentalParams;
+    private iframe;
+    url: URL;
+    /**
+     * @param url URL
+     */
+    constructor(params: LoginWindowIFrameExperimentalParams);
+    /**
+     *
+     * @param container loginContainer
+     * @returns void
+     */
     start(): void;
     /** @returns true if the popup is still open */
     isActive(): boolean;

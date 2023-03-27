@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginWindowPopup = void 0;
+exports.LoginWindowIFrameExperimental = exports.LoginWindowPopup = void 0;
 const popup_js_1 = require("./popup.js");
 const options = __importStar(require("./options.js"));
 /**
@@ -82,6 +82,59 @@ class LoginWindowPopup {
     }
 }
 exports.LoginWindowPopup = LoginWindowPopup;
+/**
+ * Experimental iframe based login.
+ * @experimental
+ */
+class LoginWindowIFrameExperimental {
+    /**
+     * @param url URL
+     */
+    constructor(params) {
+        this.params = params;
+        this.iframe = null;
+        this.url = params.url;
+    }
+    /**
+     *
+     * @param container loginContainer
+     * @returns void
+     */
+    start() {
+        this.iframe = document.createElement('iframe');
+        this.iframe.src = this.url.href;
+        this.params.parentElement.appendChild(this.iframe);
+    }
+    /** @returns true if the popup is still open */
+    isActive() {
+        return !!this.iframe;
+    }
+    /**
+     * focuses the popup
+     * @returns {void}
+     */
+    focus() {
+        var _a;
+        (_a = this.iframe) === null || _a === void 0 ? void 0 : _a.focus();
+    }
+    /**
+     * closes the popup
+     * @returns {void}
+     */
+    close() {
+        var _a, _b;
+        (_b = (_a = this.iframe) === null || _a === void 0 ? void 0 : _a.parentNode) === null || _b === void 0 ? void 0 : _b.removeChild(this.iframe);
+    }
+    /**
+     *
+     * @param event event
+     * @returns boolean
+     */
+    isEventSource(event) {
+        return event.source === this.iframe;
+    }
+}
+exports.LoginWindowIFrameExperimental = LoginWindowIFrameExperimental;
 /**
  * Manages a popup window, iframe or redirect.
  * @internal
@@ -193,7 +246,7 @@ class LoginContainer {
     /** @returns void */
     start() {
         var _a, _b;
-        (_b = (_a = this.loginWindow).start) === null || _b === void 0 ? void 0 : _b.call(_a);
+        (_b = (_a = this.loginWindow).start) === null || _b === void 0 ? void 0 : _b.call(_a, this);
     }
     /**
      * focuses the login window

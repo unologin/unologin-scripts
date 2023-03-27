@@ -18,6 +18,9 @@ export type LoginWindow = loginContainer.LoginWindow;
 
 export const LoginWindowPopup = loginContainer.LoginWindowPopup;
 
+export const LoginWindowIFrameExperimental = 
+  loginContainer.LoginWindowIFrameExperimental;
+
 export const startLogin = login.startLogin;
 
 export const startLoginContainer = login.startLoginContainer;
