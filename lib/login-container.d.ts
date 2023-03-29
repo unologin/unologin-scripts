@@ -18,6 +18,13 @@ export type MessageEventHandlerProps = {
 };
 export type MessageEventHandler<T extends object> = ((msg: T, event?: MessageEvent) => unknown);
 export type ClientLoginEventHandler = MessageEventHandler<LoginResponse>;
+export declare const messageIds: {
+    _uno_onLoginInternal: string;
+    _uno_onLoginClosed: string;
+    _uno_onLoginUrl: string;
+    _uno_onResize: string;
+};
+export type MessageId = keyof typeof messageIds;
 export type MessageTypes = {
     '_uno_onLoginInternal': LoginResponse;
     '_uno_onLoginClosed': {
@@ -32,7 +39,7 @@ export type MessageTypes = {
     };
 };
 export type MessageHandlers = {
-    [ID in keyof MessageTypes]: (MessageEventHandler<MessageTypes[ID]> & MessageEventHandlerProps)[];
+    [ID in MessageId]: (MessageEventHandler<MessageTypes[ID]> & MessageEventHandlerProps)[];
 };
 export interface LoginWindow {
     /** Initial login url. */
