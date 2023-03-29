@@ -8,7 +8,10 @@ import LoginContainer, {
   LoginWindow, 
   LoginWindowPopup, 
 } from './login-container.js';
-import { removeUndefined } from './util.js';
+
+import { 
+  removeUndefined, 
+} from './util.js';
 
 export enum LoginFlowErrorType
 {

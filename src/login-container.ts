@@ -39,6 +39,16 @@ export type MessageEventHandler<T extends object> =
 export type ClientLoginEventHandler = 
   MessageEventHandler<LoginResponse>;
 
+export const messageIds = 
+{
+  '_uno_onLoginInternal': '_uno_onLoginInternal',
+  '_uno_onLoginClosed': '_uno_onLoginClosed',
+  '_uno_onLoginUrl': '_uno_onLoginUrl',
+  '_uno_onResize': '_uno_onResize',
+};
+
+export type MessageId = keyof typeof messageIds;
+
 export type MessageTypes = 
 {
   '_uno_onLoginInternal': LoginResponse;
@@ -53,7 +63,7 @@ export type MessageTypes =
 
 export type MessageHandlers =
 { 
-  [ID in keyof MessageTypes]: (
+  [ID in MessageId]: (
     MessageEventHandler<MessageTypes[ID]> & MessageEventHandlerProps
   )[]
 }
