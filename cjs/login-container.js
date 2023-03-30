@@ -32,9 +32,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginWindowIFrameExperimental = exports.LoginWindowPopup = void 0;
+exports.LoginWindowIFrameExperimental = exports.LoginWindowPopup = exports.messageIds = void 0;
 const popup_js_1 = require("./popup.js");
 const options = __importStar(require("./options.js"));
+exports.messageIds = {
+    '_uno_onLoginInternal': '_uno_onLoginInternal',
+    '_uno_onLoginClosed': '_uno_onLoginClosed',
+    '_uno_onLoginUrl': '_uno_onLoginUrl',
+    '_uno_onResize': '_uno_onResize',
+};
 /**
  * LoginWindow implementation via popup or redirect.
  */
