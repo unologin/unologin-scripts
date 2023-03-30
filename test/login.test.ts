@@ -16,6 +16,8 @@ import LoginContainer, {
 
 import controlledAsync from './util/controlled-async';
 
+import * as options from '../src/options';
+
 describe('createLoginUrl', () => 
 {
   unologin.setup(
@@ -23,6 +25,43 @@ describe('createLoginUrl', () =>
       appId: 'my-appId',
     },
   );
+
+  it('Keeps path of realm.', () => 
+  {
+    const origSetup = options.get();
+
+    unologin.setup(
+      {
+        appId: 'my-appId',
+        realm: 'https://unolog.in/login',
+        api: 'https://api.unolog.in/login',
+      },
+    );
+
+    expect(options.get().realm)
+      .toBe('https://unolog.in/login');
+
+    const url = createLoginUrl();
+
+    expect(`${url.protocol}//${url.host}`)
+      .toBe('https://unolog.in');
+
+    expect(url.pathname)
+      .toBe('/login');
+
+    const params = Object.fromEntries(url.searchParams.entries());
+
+    expect(params)
+      .toStrictEqual(
+        {
+          client: 'Web',
+          appId: 'my-appId',
+          userClass: 'users_default',
+        },
+      );
+
+    unologin.setup(origSetup);
+  });
 
   it('Correctly creates loginUrl with default values.', () => 
   {
