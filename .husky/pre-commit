@@ -12,4 +12,4 @@ git add cjs/
 
 rm -rf docs
 yarn typedoc
-git add docs/
+git add docs/**
