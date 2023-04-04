@@ -1,6 +1,6 @@
 {
   "name": "@unologin/web-sdk",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "unolog·in web client SDK",
   "main": "lib/main.js",
   "exports": {
@@ -9,7 +9,6 @@
       "import": "./lib/main.js"
     }
   },
-  "type": "module",
   "sideEffects": true,
   "files": [
     "lib/**",
