@@ -164,6 +164,10 @@ exports.startLogin = startLogin;
  * @returns true if the user *appears* to be logged in.
  */
 function isLoggedIn(documentCookie) {
-    return !!((documentCookie || document.cookie).match(/^(.*;)?\s*_uno_loginState\s*=\s*[^;]+(.*)?$/));
+    const appId = options.get().appId;
+    const cookieName = appId ?
+        `_uno_loginState_${appId}` :
+        '_uno_loginState';
+    return !!((documentCookie || document.cookie).match(RegExp('(?:^|;\\s*)' + cookieName + '=([^;]*)')));
 }
 exports.isLoggedIn = isLoggedIn;

@@ -255,6 +255,7 @@ export function startLogin(
   return awaitLoginContainer(container);
 }
 
+
 /**
  * Check if the user *appears* to be logged in from the client side.
  * *Do NOT use for authentication* as the result may be tempered with.
@@ -264,9 +265,15 @@ export function startLogin(
  */
 export function isLoggedIn(documentCookie?: string) : boolean
 {
+  const appId = options.get().appId;
+
+  const cookieName = appId ? 
+    `_uno_loginState_${appId}` : 
+    '_uno_loginState';
+    
   return !!(
     (
       documentCookie || document.cookie
-    ).match(/^(.*;)?\s*_uno_loginState\s*=\s*[^;]+(.*)?$/)
+    ).match(RegExp('(?:^|;\\s*)' + cookieName + '=([^;]*)'))
   );
 }

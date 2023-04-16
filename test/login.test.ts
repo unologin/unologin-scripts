@@ -164,13 +164,16 @@ describe('isLoggedIn', () =>
 
   it('Returns true if _uno_loginState cookie is "success"', () => 
   {
+    const cookieName = `_uno_loginState_${options.get().appId}`;
+
     const cases = [
-      '_uno_loginState=success',
-      'otherCookie=abc; _uno_loginState=success',
+      `${cookieName}=success`,
+      `otherCookie=abc; ${cookieName}=success`,
     ];
 
     for (const cookie of cases)
     {
+      console.log(cookie);
       expect(isLoggedIn(cookie))
         .toBe(true);
     }
